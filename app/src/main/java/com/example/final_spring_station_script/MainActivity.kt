@@ -50,26 +50,26 @@ fun CarPartFacts(name: String) {
             onValueChange = { computerPartName = it },
             label =  {Text(stringResource(R.string.partName))}
         )
-        /*
+
         OutlinedTextField(
             value = computerPartType,
             onValueChange = { computerPartType = it },
-            label = { Text(stringResource(R.string.partModel)) }
+            label =  {Text(stringResource(R.string.partType))}
         )
         OutlinedTextField(
             value = computerPartBrand,
             onValueChange = { computerPartBrand = it },
-            label = { Text(stringResource(R.string.partBrand)) }
+            label =  {Text(stringResource(R.string.partBrand))}
         )
         OutlinedTextField(
             value = computerPartRating,
             onValueChange = { computerPartRating = it },
-            label = { Text(stringResource(R.string.carMake)) }
+            label = { Text(stringResource(R.string.partRating))}
         )
         OutlinedTextField(
             value = computerPartPrice,
             onValueChange = { computerPartPrice = it },
-            label = { Text(stringResource(R.string.partPrice)) }
+            label =  {Text(stringResource(R.string.partPrice))}
         )
         Button (
             onClick = {
@@ -78,7 +78,7 @@ fun CarPartFacts(name: String) {
             content = { Text(text = "Save")}
         )
 
-         */
+
 
     }
 }

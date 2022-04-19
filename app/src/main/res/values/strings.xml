@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Final_Spring_Station_Script</string>
     <string name="partName">part Name</string>
+    <string name="partType">part Type</string>
+    <string name="partBrand">Part Brand</string>
+    <string name="partRating">Part Rating</string>
+    <string name="partPrice">part Price</string>
 </resources>
