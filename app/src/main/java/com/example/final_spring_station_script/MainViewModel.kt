@@ -42,11 +42,11 @@ class MainViewModel (get: Any) : ViewModel(){
             val document =
                 if (computerComponent.Type == null || computerComponent.Type.isEmpty()) {
                     // insert
-                    firestore.collection("users").document(user.uid).collection("Parts")
+                    firestore.collection("users").document(user.uid).collection("Type")
                         .document()
                 } else {
                     // update
-                    firestore.collection("users").document(user.uid).collection("Parts")
+                    firestore.collection("users").document(user.uid).collection("Type")
                         .document(computerComponent.Type)
                 }
         }
@@ -60,7 +60,7 @@ class MainViewModel (get: Any) : ViewModel(){
 
     fun listenToParts() {
         user?.let { user ->
-            firestore.collection("users").document(user.uid).collection("")
+            firestore.collection("users").document(user.uid).collection("Type")
                 .addSnapshotListener { snapshot, error ->
                     // see of we received an error
                     if (error != null) {

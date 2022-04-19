@@ -104,7 +104,39 @@ class MainActivity : ComponentActivity() {
                 },
                 content = { Text(text = "Save") }
             )
+            viewModel.saveParts()
+        }
+    }
+    private fun signIn() {
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.EmailBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build()
+        )
+        val signinIntent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .build()
 
+        signInLauncher.launch(signinIntent)
+    }
+    private val signInLauncher = registerForActivityResult (
+        FirebaseAuthUIActivityResultContract()
+    ) {
+
+            res -> this.signInResult(res)
+    }
+    private fun signInResult(result: FirebaseAuthUIAuthenticationResult) {
+        val response = result.idpResponse
+        if (result.resultCode == RESULT_OK) {
+            firebaseUser = FirebaseAuth.getInstance().currentUser
+            firebaseUser?.let {
+                val user = User(it.uid, it.displayName)
+                viewModel.user = user
+                viewModel.saveUser()
+                viewModel.listenToParts()
+            }
+        } else {
+            Log.e("MainActivity.kt", "Error logging in " + response?.error?.errorCode)
 
         }
     }
