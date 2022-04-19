@@ -58,4 +58,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+    //retrofit and live data
+    implementation 'com.squareup.retrofit2:retrofit2:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.1.0'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
+    implementation "androidx.compose.runtime:runtime-livedata: $compose_version"
 }
