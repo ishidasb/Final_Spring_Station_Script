@@ -3,7 +3,6 @@ package com.example.final_spring_station_script
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -16,8 +15,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+
+import androidx.compose.foundation.layout.fillMaxWidth
 import com.example.final_spring_station_script.ui.theme.Final_Spring_Station_ScriptTheme
-import com.firebase.ui.auth.AuthUI
+//import com.firebase.ui.auth.AuthUI
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +27,8 @@ class MainActivity : ComponentActivity() {
             Final_Spring_Station_ScriptTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = MaterialTheme.colors.background,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     CarPartFacts("Android")
                 }
@@ -49,28 +50,33 @@ fun CarPartFacts(name: String) {
         OutlinedTextField(
             value = computerPartName,
             onValueChange = { computerPartName = it },
-            label =  {Text(stringResource(R.string.partName))}
+            label =  {Text(stringResource(R.string.partName))},
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
             value = computerPartType,
             onValueChange = { computerPartType = it },
-            label =  {Text(stringResource(R.string.partType))}
+            label =  {Text(stringResource(R.string.partType))},
+            modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
             value = computerPartBrand,
             onValueChange = { computerPartBrand = it },
-            label =  {Text(stringResource(R.string.partBrand))}
+            label =  {Text(stringResource(R.string.partBrand))},
+            modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
             value = computerPartRating,
             onValueChange = { computerPartRating = it },
-            label = { Text(stringResource(R.string.partRating))}
+            label = { Text(stringResource(R.string.partRating))},
+            modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
             value = computerPartPrice,
             onValueChange = { computerPartPrice = it },
-            label =  {Text(stringResource(R.string.partPrice))}
+            label =  {Text(stringResource(R.string.partPrice))},
+            modifier = Modifier.fillMaxWidth()
         )
         Button (
             onClick = {
