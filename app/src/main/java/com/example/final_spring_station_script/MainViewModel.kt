@@ -17,12 +17,13 @@ import kotlinx.coroutines.launch
 
 class MainViewModel (get: Any) : ViewModel(){
 
-    var computerComponent by mutableStateOf(ComputerComponent())
+
     var componentService: ComponentService = ComponentService()
     val NEW_Computer = "New Component"
     var components: MutableLiveData<List<ComputerComponent>> =
         MutableLiveData<List<ComputerComponent>>()
     var user: User? = null
+    var computerComponent by mutableStateOf(ComputerComponent())
     private lateinit var firestore: FirebaseFirestore
 
 
@@ -77,7 +78,7 @@ class MainViewModel (get: Any) : ViewModel(){
                                 allParts.add(computer)
                             }
                         }
-                        ComputerComponent.value = allParts
+                        components.value = allParts
                     }
                 }
         }
