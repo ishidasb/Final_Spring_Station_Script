@@ -1,6 +1,7 @@
 package com.example.final_spring_station_script
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
@@ -22,6 +23,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 
 class MainActivity : ComponentActivity() {
 
@@ -91,6 +94,8 @@ class MainActivity : ComponentActivity() {
             )
             Button(
                 onClick = {
+                    //sign in user
+                    signIn()
                     Toast.makeText(
                         context,
                         "$computerPartName $computerPartType $computerPartBrand $computerPartRating $computerPartPrice",
@@ -99,7 +104,39 @@ class MainActivity : ComponentActivity() {
                 },
                 content = { Text(text = "Save") }
             )
+            viewModel.saveParts()
+        }
+    }
+    private fun signIn() {
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.EmailBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build()
+        )
+        val signinIntent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .build()
 
+        signInLauncher.launch(signinIntent)
+    }
+    private val signInLauncher = registerForActivityResult (
+        FirebaseAuthUIActivityResultContract()
+    ) {
+
+            res -> this.signInResult(res)
+    }
+    private fun signInResult(result: FirebaseAuthUIAuthenticationResult) {
+        val response = result.idpResponse
+        if (result.resultCode == RESULT_OK) {
+            firebaseUser = FirebaseAuth.getInstance().currentUser
+            firebaseUser?.let {
+                val user = User(it.uid, it.displayName)
+                viewModel.user = user
+                viewModel.saveUser()
+                viewModel.listenToParts()
+            }
+        } else {
+            Log.e("MainActivity.kt", "Error logging in " + response?.error?.errorCode)
 
         }
     }
