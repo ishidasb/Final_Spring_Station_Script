@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    CarPartFacts("Android")
+                    CarPartFacts("Android"/*,ComputerComponent,SpecifiedComputerPart, viewModel.computerComponent*/)
                 }
             }
         }
