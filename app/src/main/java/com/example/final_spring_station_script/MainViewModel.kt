@@ -17,18 +17,19 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import kotlinx.coroutines.launch
 
 
-class MainViewModel (get: Any) : ViewModel(){
+class MainViewModel (var componentService: ComponentService = ComponentService()) : ViewModel(){
 
 
-    var componentService: ComponentService = ComponentService()
-    //var userPickedPart: SpecifiedComputerPart by mutableStateOf(SpecifiedComputerPart())
-    val NEWLY_CREATED_PART = "New Component"
-    var components: MutableLiveData<List<ComputerComponent>> =
-        MutableLiveData<List<ComputerComponent>>()
+    internal val NEWLY_CREATED_PART = "New Component"
+    var components: MutableLiveData<List<ComputerComponent>> = MutableLiveData<List<ComputerComponent>>()
+    var specifiedComputerPart: MutableLiveData<List<SpecifiedComputerPart>> = MutableLiveData<List<SpecifiedComputerPart>>()
+    var userPickedPart: SpecifiedComputerPart by mutableStateOf(SpecifiedComputerPart())
+
+
     var user: User? = null
     var computerComponent by mutableStateOf(ComputerComponent())
     private lateinit var firestore: FirebaseFirestore
-    //val eventParts : MutableLiveData<List<ComputerComponent>> = MutableLiveData<List<ComputerComponent>>()
+    val eventParts : MutableLiveData<List<ComputerComponent>> = MutableLiveData<List<ComputerComponent>>()
 
     init {
         firestore = FirebaseFirestore.getInstance()

@@ -37,6 +37,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 //import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.TextRange
@@ -44,7 +45,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.example.final_spring_station_script.dto.SpecifiedComputerPart
-import java.util.jar.Attributes
 
 class MainActivity : ComponentActivity() {
 
@@ -61,25 +61,29 @@ class MainActivity : ComponentActivity() {
                 val user = User(it.uid, "")
                 viewModel.user = user
                 viewModel.listenToParts()
+            }
+            val parts by viewModel.computerComponent().observeAsState(initial = emptyList())
+            val specifiedComputerPart by viewModel.components.observeAsState(initial = emptyList())
                 Final_Spring_Station_ScriptTheme {
                     // A surface container using the 'background' color from the theme
                     Surface(
                         color = MaterialTheme.colors.background,
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        ComputerPartFacts("Android", parts, viewModel.specifiedComputerPart, viewModel.userPickedPart)
                         ComputerPartFacts("Android")
                     }
                 }
             }
         }
-    }
+
 
     @Composable
     fun ComputerPartFacts(
         name: String,
         components: List<ComputerComponent> = ArrayList<ComputerComponent>(),
-        specifiedComputerPart: List<SpecifiedComputerPart> = ArrayList<SpecifiedComputerPart>(),
-        userPickedPart : SpecifiedComputerPart = SpecifiedComputerPart()
+        specifiedComputerPart: ArrayList<SpecifiedComputerPart> = ArrayList<SpecifiedComputerPart>(),
+        userPickedPart: SpecifiedComputerPart = SpecifiedComputerPart()
     ){
         var computerPartType by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartType)}
         var computerPartName by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartName)}
