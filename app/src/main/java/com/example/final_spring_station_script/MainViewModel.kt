@@ -1,5 +1,6 @@
 package com.example.final_spring_station_script
 
+import android.content.ContentValues
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +26,7 @@ class MainViewModel (get: Any) : ViewModel(){
     var user: User? = null
     var computerComponent by mutableStateOf(ComputerComponent())
     private lateinit var firestore: FirebaseFirestore
-
+    //val eventParts : MutableLiveData<List<ComputerComponent>> = MutableLiveData<List<ComputerComponent>>()
 
     init {
         firestore = FirebaseFirestore.getInstance()
@@ -81,6 +82,28 @@ class MainViewModel (get: Any) : ViewModel(){
                         components.value = allParts
                     }
                 }
+        }
+    }
+    internal fun updatePartsDatabase(computerComponent : ComputerComponent) {
+        user?.let { user ->
+            val photoDocument =
+                if (computerComponent.Name.isEmpty()) {
+                    // we need to create a new document.
+                    firestore.collection("users").document(user.uid).collection("Type")
+                        .document(computerComponent.Type).collection("name").document()
+                } else {
+                    // update existing document
+                    firestore.collection("users").document(user.uid).collection("Type")
+                        .document(computerComponent.Type).collection("name").document(computerComponent.Name)
+                }
+            computerComponent.Name = photoDocument.id
+            val handle = photoDocument.set(computerComponent)
+            handle.addOnSuccessListener {
+                Log.i(ContentValues.TAG, "Successfully updated computer parts metadata")
+            }
+            handle.addOnFailureListener {
+                Log.e(ContentValues.TAG, "Failed to update updated computer parts metadata  ${it.message}")
+            }
         }
     }
 }

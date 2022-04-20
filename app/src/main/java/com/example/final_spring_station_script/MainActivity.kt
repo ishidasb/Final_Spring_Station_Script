@@ -6,7 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import android.widget.Toast
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -16,7 +17,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.ui.unit.dp
+import com.example.final_spring_station_script.dto.ComputerComponent
 import com.example.final_spring_station_script.dto.User
 import com.example.final_spring_station_script.ui.theme.Final_Spring_Station_ScriptTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +29,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.foundation.lazy.items
 
 class MainActivity : ComponentActivity() {
 
@@ -105,6 +111,53 @@ class MainActivity : ComponentActivity() {
                 content = { Text(text = "Save") }
             )
             viewModel.saveParts()
+            Events()
+        }
+    }
+
+    @Composable
+    private fun Events() {
+        val parts by viewModel.components.observeAsState(initial = emptyList())
+        LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp), modifier = Modifier.fillMaxHeight()) {
+            items (
+                items = parts,
+                itemContent = {
+                    EventListItem(computerComponent = it)
+                }
+            )
+        }
+    }
+    @Composable
+    fun EventListItem(computerComponent : ComputerComponent)
+    {
+        var inDescription by remember(computerComponent.Name) {mutableStateOf(computerComponent.Brand)}
+        Row{
+            Column(Modifier.weight(2f)) {
+                Text(text= "")
+            }
+            Column(Modifier.weight(4f)) {
+                Text(text= computerComponent.Name, style= MaterialTheme.typography.h6)
+                Text(text= computerComponent.Brand, style= MaterialTheme.typography.h6)
+               /* OutlinedTextField(value = inDescription,
+                    onValueChange = {inDescription = it},
+                    label  = { Text(stringResource(R.string.Name))},
+                    modifier = Modifier.fillMaxWidth()
+                )*/
+            }
+            Column(Modifier.weight(1f)) {
+                Button (
+                    onClick = {
+                        computerComponent.Brand = inDescription
+                        viewModel.updatePartsDatabase(computerComponent)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "Save",
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
+                }
+            }
         }
     }
     private fun signIn() {
