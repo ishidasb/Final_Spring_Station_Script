@@ -21,6 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.example.final_spring_station_script.dto.ComputerComponent
 import com.example.final_spring_station_script.dto.User
 import com.example.final_spring_station_script.ui.theme.Final_Spring_Station_ScriptTheme
@@ -63,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colors.background,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        CarPartFacts("Android")
+                        ComputerPartFacts("Android")
                     }
                 }
             }
@@ -71,15 +74,16 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun CarPartFacts(name: String) {
-        var computerPartName by remember { mutableStateOf(" ") }
-        var computerPartType by remember { mutableStateOf("") }
-        var computerPartBrand by remember { mutableStateOf("") }
-        var computerPartRating by remember { mutableStateOf("") }
-        var computerPartPrice by remember { mutableStateOf("") }
+    fun ComputerPartFacts(name: String, parts: List<ComputerComponent> = ArrayList<ComputerComponent>(), specifiedComputerPart: List<SpecifiedComputerPart> = ArrayList<SpecifiedComputerPart>(), userPickedPart : SpecifiedComputerPart = SpecifiedComputerPart()){
+        var computerPartType by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartType)}
+        var computerPartName by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartName)}
+        var computerPartBrand by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartBrand)}
+        var computerPartPrice by remember(userPickedPart.thisPartId){ mutableStateOf(userPickedPart.thisPartPrice)}
+        var computerPartRating by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartRating)}
         val context = LocalContext.current
         Column() {
-
+            ComputerPartSpinner(ComputerPartsDatabase = specifiedComputerPart)
+            TextFieldWithDropdownUsage(dataIn = parts, stringResource(R.string.partName), userPickedPart)
             OutlinedTextField(
                 value = computerPartName,
                 onValueChange = { computerPartName = it },
@@ -100,24 +104,36 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = computerPartRating,
-                onValueChange = { computerPartRating = it },
-                label = { Text(stringResource(R.string.partRating)) },
+                value = computerPartPrice,
+                onValueChange = { computerPartPrice = it },
+                label = Text("Part Price"),
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = computerPartPrice,
-                onValueChange = { computerPartPrice = it },
-                label = { Text(stringResource(R.string.partPrice)) },
+                value = computerPartRating,
+                onValueChange = { computerPartRating = it },
+                label =  Text("Part Rating") ,
                 modifier = Modifier.fillMaxWidth()
             )
+
             Button(
                 onClick = {
                     //sign in user
                     signIn()
+                    var specifiedComputerPart = SpecifiedComputerPart().apply {
+                        thisPartType = computerPartType
+                        thisPartName = computerPartName
+                        thisPartBrand = computerPartBrand
+                        thisPartRating = computerPartRating
+                        thisPartPrice = computerPartPrice
+                        thisPartId = selectedPart?.let{
+                            it.PartIdFinal
+                        }?: 0
+                    }
+                    viewModel.saveParts()
                     Toast.makeText(
                         context,
-                        "$computerPartName $computerPartType $computerPartBrand $computerPartRating $computerPartPrice",
+                        " $computerPartType $computerPartName $computerPartBrand $computerPartPrice $computerPartRating",
                         Toast.LENGTH_LONG
                     ).show()
                 },
@@ -132,7 +148,8 @@ class MainActivity : ComponentActivity() {
         var computerPartText by remember {mutableStateOf("My Car Inventory")}
         var expanded by remember { mutableStateOf(false)}
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Row(Modifier.padding(26.dp)
+            Row(Modifier
+                .padding(26.dp)
                 .clickable {
                     expanded = !expanded
                 }
@@ -320,7 +337,7 @@ class MainActivity : ComponentActivity() {
         @Composable
         fun DefaultPreview() {
             Final_Spring_Station_ScriptTheme {
-                CarPartFacts("Android")
+                ComputerPartFacts("Android")
             }
         }
 }
