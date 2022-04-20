@@ -23,7 +23,7 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
     internal val NEWLY_CREATED_PART = "New Component"
     var components: MutableLiveData<List<ComputerComponent>> = MutableLiveData<List<ComputerComponent>>()
     var specifiedComputerPart: MutableLiveData<List<SpecifiedComputerPart>> = MutableLiveData<List<SpecifiedComputerPart>>()
-    var userPickedPart: SpecifiedComputerPart by mutableStateOf(SpecifiedComputerPart())
+    var userPickedPart: SpecifiedComputerPart by mutableStateOf(SpecifiedComputerPart(thisPartId = 0))
 
 
     var user: User? = null

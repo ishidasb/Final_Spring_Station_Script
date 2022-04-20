@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                 viewModel.user = user
                 viewModel.listenToParts()
             }
-            val parts by viewModel.computerComponent().observeAsState(initial = emptyList())
+                // val parts by viewModel.computerComponent().observeAsState(initial = emptyList())
             val specifiedComputerPart by viewModel.components.observeAsState(initial = emptyList())
                 Final_Spring_Station_ScriptTheme {
                     // A surface container using the 'background' color from the theme
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colors.background,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        ComputerPartFacts("Android", parts, viewModel.specifiedComputerPart, viewModel.userPickedPart)
+                        //ComputerPartFacts("Android", parts, viewModel.specifiedComputerPart, viewModel.userPickedPart)
                         ComputerPartFacts("Android")
                     }
                 }
@@ -83,7 +83,7 @@ class MainActivity : ComponentActivity() {
         name: String,
         components: List<ComputerComponent> = ArrayList<ComputerComponent>(),
         specifiedComputerPart: ArrayList<SpecifiedComputerPart> = ArrayList<SpecifiedComputerPart>(),
-        userPickedPart: SpecifiedComputerPart = SpecifiedComputerPart()
+        userPickedPart: SpecifiedComputerPart = SpecifiedComputerPart(thisPartId = 0)
     ){
         var computerPartType by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartType)}
         var computerPartName by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartName)}
