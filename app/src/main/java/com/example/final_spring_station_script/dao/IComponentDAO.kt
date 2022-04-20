@@ -6,6 +6,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface IComponentDAO {
-    @GET ("b/625e67abbc312b30ebe93989")
+    @GET ("b/62608a5dbc312b30ebea2555")
     fun getAllComponents() : Call<ArrayList<ComputerComponent>>
 }
