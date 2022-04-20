@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1002071965835",
+    "project_id": "final-spring-station-script",
+    "storage_bucket": "final-spring-station-script.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002071965835:android:d1bcdf4f956f9f7712548e",
+        "android_client_info": {
+          "package_name": "com.example.final_spring_station_script"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1002071965835-uke576iuofetpvek13jk3jpve0q30p81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsL1iEnMyNBmoIRjq_P8mNNzsTpcBy2_U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1002071965835-uke576iuofetpvek13jk3jpve0q30p81.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
