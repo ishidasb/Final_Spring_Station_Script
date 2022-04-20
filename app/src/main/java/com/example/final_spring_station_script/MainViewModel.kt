@@ -43,17 +43,17 @@ class MainViewModel (get: Any) : ViewModel(){
             val document =
                 if (computerComponent.Type == null || computerComponent.Type.isEmpty()) {
                     // insert
-                    firestore.collection("users").document(user.uid).collection("Type")
+                    firestore.collection("ComputerPartsDatabase").document(user.uid).collection("Type")
                         .document()
                 } else {
                     // update
-                    firestore.collection("users").document(user.uid).collection("Type")
+                    firestore.collection("ComputerPartsDatabase").document(user.uid).collection("Type")
                         .document(computerComponent.Type)
                 }
         }
     }
     fun saveUser() {user?.let { user ->
-        val handle = firestore.collection("users").document(user.uid).set(user)
+        val handle = firestore.collection("ComputerPartsDatabase").document(user.uid).set(user)
         handle.addOnSuccessListener { Log.d("Firebase", "User Saved") }
         handle.addOnFailureListener { Log.e("Firebase", "User save failed $it") }
         }
@@ -84,7 +84,7 @@ class MainViewModel (get: Any) : ViewModel(){
                 }
         }
     }
-    internal fun updatePartsDatabase(computerComponent : ComputerComponent) {
+     internal fun updatePartsDatabase(computerComponent : ComputerComponent) {
         user?.let { user ->
             val photoDocument =
                 if (computerComponent.Name.isEmpty()) {
