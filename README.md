@@ -11,7 +11,7 @@ A mobile application that lets you search for computer parts to build your own P
 
 ## Storyboard
 
-![Storyboard](Final.png)
+![Storyboard](Storyboard.png)
 
 
 ## Functional Requirements
