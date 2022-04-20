@@ -1,11 +1,14 @@
-package com.example.final_spring_station_script
 
-import com.example.final_spring_station_script.service.IComponentService
+package com.example.springprojectstationbuild.service
+
+import com.example.final_spring_station_script.MainViewModel
 import com.example.final_spring_station_script.service.ComponentService
-import org.koin.dsl.module
+import com.example.final_spring_station_script.service.IComponentService
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
 val appModule = module {
-    viewModel {MainViewModel(get())}
-    single<IComponentService>{ComponentService()}
+    viewModel { MainViewModel(get()) }
+    single<ComponentService> { ComponentService() }
 }
+
