@@ -44,14 +44,16 @@ class MainActivity : ComponentActivity() {
                 val user = User(it.uid, "")
                 viewModel.user = user
                 viewModel.listenToParts()
-                Final_Spring_Station_ScriptTheme {
-                    // A surface container using the 'background' color from the theme
-                    Surface(
-                        color = MaterialTheme.colors.background,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        CarPartFacts("Android")
-                    }
+            }
+            val ComputerComponent by viewModel.components.observeAsState(initial = emptyList())
+            val SpecifiedComputerPart by viewModel.computerparts.observeAsState(initial = emptyList())
+            Final_Spring_Station_ScriptTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    color = MaterialTheme.colors.background,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    CarPartFacts("Android")
                 }
             }
         }

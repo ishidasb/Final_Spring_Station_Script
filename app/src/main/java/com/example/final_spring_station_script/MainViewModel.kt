@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.final_spring_station_script.dto.ComputerComponent
+import com.example.final_spring_station_script.dto.SpecifiedComputerPart
 import com.example.final_spring_station_script.dto.User
 import com.example.final_spring_station_script.service.ComponentService
 import com.google.firebase.firestore.FirebaseFirestore
@@ -23,6 +24,8 @@ class MainViewModel (get: Any) : ViewModel(){
     val NEW_Computer = "New Component"
     var components: MutableLiveData<List<ComputerComponent>> =
         MutableLiveData<List<ComputerComponent>>()
+    var computerparts :  MutableLiveData<List<SpecifiedComputerPart>> =
+        MutableLiveData<List<SpecifiedComputerPart>>()
     var user: User? = null
     var computerComponent by mutableStateOf(ComputerComponent())
     private lateinit var firestore: FirebaseFirestore
@@ -61,7 +64,7 @@ class MainViewModel (get: Any) : ViewModel(){
 
     fun listenToParts() {
         user?.let { user ->
-            firestore.collection("users").document(user.uid).collection("Type")
+            firestore.collection("ComputerPartsDatabase").document(user.uid).collection("Type")
                 .addSnapshotListener { snapshot, error ->
                     // see of we received an error
                     if (error != null) {
@@ -70,16 +73,16 @@ class MainViewModel (get: Any) : ViewModel(){
                     }
                     // if we reached this point, there was not an error, and we have data.
                     snapshot?.let {
-                        val allParts = ArrayList<ComputerComponent>()
-                        allParts.add(ComputerComponent(NEW_Computer))
+                        val allParts = ArrayList<SpecifiedComputerPart>()
+                        allParts.add(SpecifiedComputerPart(NEW_Computer))
                         val documents = snapshot.documents
                         documents.forEach {
-                            val computer = it.toObject(ComputerComponent::class.java)
+                            val computer = it.toObject(SpecifiedComputerPart::class.java)
                             computer?.let {
                                 allParts.add(computer)
                             }
                         }
-                        components.value = allParts
+                        computerparts.value = allParts
                     }
                 }
         }
