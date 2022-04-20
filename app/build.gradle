@@ -88,4 +88,8 @@ dependencies {
     //firebase
     implementation platform('com.google.firebase:firebase-bom:29.3.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    //firebase authentication
+    implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
 }

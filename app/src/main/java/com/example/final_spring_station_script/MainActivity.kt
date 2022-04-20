@@ -1,5 +1,6 @@
 package com.example.final_spring_station_script
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -43,12 +44,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.example.final_spring_station_script.dto.SpecifiedComputerPart
+import java.util.jar.Attributes
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModel<MainViewModel>()
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
-    private var userPickedPart: SpecifiedComputerPart by mutableStateOf(SpecifiedComputerPart())
     private var strSelectedData: String = ""
     private var selectedPart: ComputerComponent? = null
     private var inPartName: String = ""
@@ -74,7 +75,12 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun ComputerPartFacts(name: String, parts: List<ComputerComponent> = ArrayList<ComputerComponent>(), specifiedComputerPart: List<SpecifiedComputerPart> = ArrayList<SpecifiedComputerPart>(), userPickedPart : SpecifiedComputerPart = SpecifiedComputerPart()){
+    fun ComputerPartFacts(
+        name: String,
+        components: List<ComputerComponent> = ArrayList<ComputerComponent>(),
+        specifiedComputerPart: List<SpecifiedComputerPart> = ArrayList<SpecifiedComputerPart>(),
+        userPickedPart : SpecifiedComputerPart = SpecifiedComputerPart()
+    ){
         var computerPartType by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartType)}
         var computerPartName by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartName)}
         var computerPartBrand by remember(userPickedPart.thisPartId) { mutableStateOf(userPickedPart.thisPartBrand)}
@@ -83,14 +89,17 @@ class MainActivity : ComponentActivity() {
         val context = LocalContext.current
         Column() {
             ComputerPartSpinner(ComputerPartsDatabase = specifiedComputerPart)
-            TextFieldWithDropdownUsage(dataIn = parts, stringResource(R.string.partName), userPickedPart)
+            TextFieldWithDropdownUsage(
+                dataIn = components,
+                stringResource(R.string.partName),
+                userPickedPart
+            )
             OutlinedTextField(
                 value = computerPartName,
                 onValueChange = { computerPartName = it },
                 label = { Text(stringResource(R.string.partName)) },
                 modifier = Modifier.fillMaxWidth()
             )
-
             OutlinedTextField(
                 value = computerPartType,
                 onValueChange = { computerPartType = it },
@@ -105,13 +114,21 @@ class MainActivity : ComponentActivity() {
             )
             OutlinedTextField(
                 value = computerPartPrice,
-                onValueChange = { computerPartPrice = it },
+                onValueChange = {
+                    var value = computerPartPrice
+                    var it = value
+                    computerPartPrice = it
+                },
                 label = Text("Part Price"),
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
                 value = computerPartRating,
-                onValueChange = { computerPartRating = it },
+                onValueChange = {
+                    var value = computerPartRating
+                    var it = value
+                    computerPartRating = it
+                },
                 label =  Text("Part Rating") ,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -120,7 +137,7 @@ class MainActivity : ComponentActivity() {
                 onClick = {
                     //sign in user
                     signIn()
-                    var specifiedComputerPart = SpecifiedComputerPart().apply {
+                    userPickedPart.apply {
                         thisPartType = computerPartType
                         thisPartName = computerPartName
                         thisPartBrand = computerPartBrand
@@ -145,7 +162,7 @@ class MainActivity : ComponentActivity() {
     }
     @Composable
     fun ComputerPartSpinner (ComputerPartsDatabase: List<SpecifiedComputerPart>){
-        var computerPartText by remember {mutableStateOf("My Car Inventory")}
+        var computerPartText by remember {mutableStateOf("My Computer Parts Inventory")}
         var expanded by remember { mutableStateOf(false)}
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Row(Modifier
@@ -163,8 +180,21 @@ class MainActivity : ComponentActivity() {
                     ComputerPartsDatabase.forEach {
                             specifiedComputerPart-> DropdownMenuItem(onClick = {
                         expanded = false
+
+                        if (specifiedComputerPart.thisPartName == viewModel.NEWLY_CREATED_PART) {
+                            //user is created a list item of part
+                            computerPartText = ""
+                            specifiedComputerPart.thisPartName = ""
+                        } else {
+                            //part exists already
+                            computerPartText = specifiedComputerPart.toString()
+                            selectedPart =
+                                ComputerComponent(Type = "", Name = "", Brand = "", Price = 0.0 , Rating = 0 )
+                            inPartName = specifiedComputerPart.thisPartName
+                        }
+                        //viewModel.userPickedPart = specifiedComputerPart
                         computerPartText = specifiedComputerPart.toString()
-                        userPickedPart = specifiedComputerPart
+                        //userPickedPart = specifiedComputerPart
                     }) {
                         Text(text = specifiedComputerPart.toString())
                     }
@@ -174,7 +204,11 @@ class MainActivity : ComponentActivity() {
         }
     }
     @Composable
-            fun TextFieldWithDropdownUsage(dataIn: List<ComputerComponent>, label: String = "", userPickedPart: SpecifiedComputerPart) {
+            fun TextFieldWithDropdownUsage(
+                dataIn: List<ComputerComponent>,
+                label: String = "",
+                userPickedPart: SpecifiedComputerPart)
+            {
             val dropDownOptions = remember { mutableStateOf(listOf<ComputerComponent>()) }
             val textFieldValue = remember(userPickedPart.thisPartId) { mutableStateOf(TextFieldValue(userPickedPart.thisPartName)) }
             val dropDownExpanded = remember { mutableStateOf(false) }
@@ -244,10 +278,7 @@ class MainActivity : ComponentActivity() {
                                 )
                                 selectedPart = text
                             }) {
-                                //Text(text = text.toString())
-                                //}
                                 Text(text = text.toString())
-
                             }
                     }
                 }
@@ -333,11 +364,20 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-        @Preview(showBackground = true)
+        @Preview(name = "light mode", showBackground = true)
+        @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
         @Composable
         fun DefaultPreview() {
             Final_Spring_Station_ScriptTheme {
                 ComputerPartFacts("Android")
             }
         }
+}
+
+private fun ColumnScope.OutlinedTextField(value: Int, onValueChange: () -> Unit, label: Unit, modifier: Modifier) {
+
+}
+
+private fun ColumnScope.OutlinedTextField(value: Double, onValueChange: () -> Unit, label: Unit, modifier: Modifier) {
+
 }
