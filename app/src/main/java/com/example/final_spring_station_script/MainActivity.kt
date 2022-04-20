@@ -30,11 +30,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import androidx.compose.runtime.livedata.observeAsState
+//import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.PopupProperties
 import com.example.final_spring_station_script.dto.SpecifiedComputerPart
 
 class MainActivity : ComponentActivity() {
@@ -42,6 +46,9 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModel<MainViewModel>()
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
     private var userPickedPart: SpecifiedComputerPart by mutableStateOf(SpecifiedComputerPart())
+    private var strSelectedData: String = ""
+    private var selectedPart: ComputerComponent? = null
+    private var inPartName: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -150,6 +157,87 @@ class MainActivity : ComponentActivity() {
         }
     }
     @Composable
+            fun TextFieldWithDropdownUsage(dataIn: List<ComputerComponent>, label: String = "", userPickedPart: SpecifiedComputerPart) {
+            val dropDownOptions = remember { mutableStateOf(listOf<ComputerComponent>()) }
+            val textFieldValue = remember(userPickedPart.thisPartId) { mutableStateOf(TextFieldValue(userPickedPart.thisPartName)) }
+            val dropDownExpanded = remember { mutableStateOf(false) }
+
+            fun onDropdownDismissRequest() {
+                dropDownExpanded.value = false
+            }
+
+            fun onValueChanged(value: TextFieldValue) {
+                strSelectedData = value.text
+                inPartName = value.text
+                dropDownExpanded.value = true
+                textFieldValue.value = value
+                dropDownOptions.value = dataIn.filter {
+                    it.toString().startsWith(value.text) && it.toString() != value.text
+                }.take(3)
+            }
+            TextFieldWithDropdown(
+                modifier = Modifier.fillMaxWidth(),
+                value = textFieldValue.value,
+                setValue = ::onValueChanged,
+                onDismissRequest = ::onDropdownDismissRequest,
+                dropDownExpanded = dropDownExpanded.value,
+                list = dropDownOptions.value,
+                label = label
+            )
+        }
+        @Composable
+        fun TextFieldWithDropdown(
+            modifier: Modifier = Modifier,
+            value: TextFieldValue,
+            setValue: (TextFieldValue)-> Unit,
+            onDismissRequest: ()-> Unit,
+            dropDownExpanded: Boolean,
+            list: List<ComputerComponent>,
+            label: String = ""
+        ) {
+            Box(modifier) {
+                TextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onFocusChanged { focusState ->
+                            if (!focusState.isFocused)
+                                onDismissRequest()
+                        },
+                    value = value,
+                    onValueChange = setValue,
+                    label = { Text(label) },
+                    colors = TextFieldDefaults.outlinedTextFieldColors()
+                )
+                DropdownMenu(
+                    expanded = dropDownExpanded,
+                    properties = PopupProperties(
+                        focusable = false,
+                        dismissOnBackPress = true,
+                        dismissOnClickOutside = true
+                    ),
+                    onDismissRequest = onDismissRequest
+                ) {
+                    list.forEach { text->
+                            DropdownMenuItem(onClick = {
+                                setValue(
+                                    TextFieldValue(
+                                        text.toString(),
+                                        TextRange(text.toString().length)
+                                    )
+                                )
+                                selectedPart = text
+                            }) {
+                                //Text(text = text.toString())
+                                //}
+                                Text(text = text.toString())
+
+                            }
+                    }
+                }
+            }
+        }
+
+    @Composable
     private fun Events() {
         val parts by viewModel.components.observeAsState(initial = emptyList())
         LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp), modifier = Modifier.fillMaxHeight()) {
@@ -228,11 +316,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        Final_Spring_Station_ScriptTheme {
-            CarPartFacts("Android")
+        @Preview(showBackground = true)
+        @Composable
+        fun DefaultPreview() {
+            Final_Spring_Station_ScriptTheme {
+                CarPartFacts("Android")
+            }
         }
-    }
 }

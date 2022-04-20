@@ -6,7 +6,8 @@ data class SpecifiedComputerPart(
     var thisPartName :String = "",
     var thisPartBrand : String = "",
     var thisPartPrice : Double = 0.0,
-    var thisPartRating : Int = 0
+    var thisPartRating : Int = 0,
+    var thisPartId : Int
     ) {
     override fun toString(): String {
         return "$thisPartType, $thisPartName, $thisPartBrand, $thisPartPrice, $thisPartRating"
