@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -31,11 +32,16 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.sp
+import com.example.final_spring_station_script.dto.SpecifiedComputerPart
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModel<MainViewModel>()
     private var firebaseUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private var userPickedPart: SpecifiedComputerPart by mutableStateOf(SpecifiedComputerPart())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -114,7 +120,35 @@ class MainActivity : ComponentActivity() {
             Events()
         }
     }
-
+    @Composable
+    fun ComputerPartSpinner (ComputerPartsDatabase: List<SpecifiedComputerPart>){
+        var computerPartText by remember {mutableStateOf("My Car Inventory")}
+        var expanded by remember { mutableStateOf(false)}
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Row(Modifier.padding(26.dp)
+                .clickable {
+                    expanded = !expanded
+                }
+                .padding(8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(text = computerPartText, fontSize = 20.sp, modifier = Modifier.padding(end = 8.dp))
+                Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
+                DropdownMenu(expanded = expanded, onDismissRequest = {expanded = false}){
+                    ComputerPartsDatabase.forEach {
+                            specifiedComputerPart-> DropdownMenuItem(onClick = {
+                        expanded = false
+                        computerPartText = specifiedComputerPart.toString()
+                        userPickedPart = specifiedComputerPart
+                    }) {
+                        Text(text = specifiedComputerPart.toString())
+                    }
+                    }
+                }
+            }
+        }
+    }
     @Composable
     private fun Events() {
         val parts by viewModel.components.observeAsState(initial = emptyList())
