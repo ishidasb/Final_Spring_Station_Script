@@ -145,13 +145,14 @@ class MainActivity : ComponentActivity() {
                     //sign in user
                     signIn()
                     userPickedPart.apply {
+                        viewModel.userPickedPart
                         thisPartType = computerPartType
                         thisPartName = computerPartName
                         thisPartBrand = computerPartBrand
                         thisPartRating = computerPartRating
                         thisPartPrice = computerPartPrice
                         thisPartId = selectedPart?.let{
-                            it.PartIdFinal
+                              it.PartIdFinal
                         }?: 0
                     }
                     viewModel.saveParts()
