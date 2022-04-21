@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1002071965835-tjk33ptu9si6nomm0fibmjarpvvk80tk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.final_spring_station_script",
+            "certificate_hash": "28c39b873042c87fb435848e62456d8cb927ba28"
+          }
+        },
+        {
           "client_id": "1002071965835-uke576iuofetpvek13jk3jpve0q30p81.apps.googleusercontent.com",
           "client_type": 3
         }
