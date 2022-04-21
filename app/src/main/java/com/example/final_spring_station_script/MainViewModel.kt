@@ -46,11 +46,11 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
             val document =
                 if (computerComponent.Type == null || computerComponent.Type.isEmpty()) {
                     // insert
-                    firestore.collection("users").document(user.uid).collection("Type")
+                    firestore.collection("users").document(user.uid).collection("PartIdFinal")
                         .document()
                 } else {
                     // update
-                    firestore.collection("users").document(user.uid).collection("Type")
+                    firestore.collection("users").document(user.uid).collection("PartIdFinal ")
                         .document(computerComponent.Type)
                 }
             computerComponent.Type = document.id
@@ -70,7 +70,7 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
 
     fun listenToParts() {
         user?.let { user ->
-            firestore.collection("users").document(user.uid).collection("Type")
+            firestore.collection("users").document(user.uid).collection("PartIdFinal")
                 .addSnapshotListener { snapshot, error ->
                     // see of we received an error
                     if (error != null) {
@@ -98,11 +98,11 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
             val partDocument =
                 if (computerComponent.Name.isEmpty()) {
                     // we need to create a new document.
-                    firestore.collection("users").document(user.uid).collection("Type")
+                    firestore.collection("users").document(user.uid).collection("PartIdFinal")
                         .document(computerComponent.Type).collection("name").document()
                 } else {
                     // update existing document
-                    firestore.collection("users").document(user.uid).collection("Type")
+                    firestore.collection("users").document(user.uid).collection("PartIdFinal")
                         .document(computerComponent.Type).collection("name").document(computerComponent.Name)
                 }
             computerComponent.Name = partDocument.id
