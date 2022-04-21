@@ -144,8 +144,7 @@ class MainActivity : ComponentActivity() {
                 onClick = {
                     //sign in user
                     signIn()
-                    userPickedPart.apply {
-                        viewModel.userPickedPart
+                    viewModel.userPickedPart.apply {
                         thisPartType = computerPartType
                         thisPartName = computerPartName
                         thisPartBrand = computerPartBrand
