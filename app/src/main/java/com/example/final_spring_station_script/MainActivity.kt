@@ -40,6 +40,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
@@ -307,46 +308,55 @@ class MainActivity : ComponentActivity() {
     fun EventListItem(computerComponent : ComputerComponent)
     {
         var inDescription by remember(computerComponent.Name) {mutableStateOf(computerComponent.Brand)}
-        Row{
+        Row(Modifier.fillMaxSize().padding(5.dp)){
             Column(Modifier.weight(.01f)) {
                 Text(text= "")
             }
-            Column(Modifier.weight(4f).background(Color.Gray).paddingFromBaseline(5.dp, 25.dp)) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.primary) {}
-                Text(text = computerComponent.Brand, style = MaterialTheme.typography.h6)
-                Text(text = computerComponent.Name, style = MaterialTheme.typography.h6)
-                Text(text = computerComponent.Type, style = MaterialTheme.typography.body1)
+            Column(
+                Modifier
+                    .weight(4f)
+                    .background(Color.LightGray)
+                    .paddingFromBaseline(5.dp, 25.dp)) {
+                Row{
+                    Column(modifier = Modifier.weight(4f)) {
+                        Text(text = computerComponent.Brand, style = MaterialTheme.typography.h6)
+                        Text(text = computerComponent.Name, style = MaterialTheme.typography.h6)
+                        Text(text = computerComponent.Type, style = MaterialTheme.typography.body1)
 
-                Text(
-                    text = "Price: $" + computerComponent.Price.toString(),
-                    style = MaterialTheme.typography.body1
-                )
-                Text(
-                    text = "Rating: " + computerComponent.Rating.toString(),
-                    style = MaterialTheme.typography.body1
-                )
+                        Text(
+                            text = "Price: $" + computerComponent.Price.toString(),
+                            style = MaterialTheme.typography.body1
+                        )
+                        Text(
+                            text = "Rating: " + computerComponent.Rating.toString(),
+                            style = MaterialTheme.typography.body1
+                        )
+                    }
+                    Column(Modifier.weight(1f)) {
+                        Button (
+                            onClick = {
+                                computerComponent.Brand = inDescription
+                                viewModel.updatePartsDatabase(computerComponent)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = "Save",
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                        }
+                    }
+                }
+
 
                 /* OutlinedTextField(value = inDescription,
                      onValueChange = {inDescription = it},
                      label  = { Text(stringResource(R.string.Name))},
                      modifier = Modifier.fillMaxWidth()
                  )*/
+
             }
-            Column(Modifier.weight(1f)) {
-                Button (
-                    onClick = {
-                        computerComponent.Brand = inDescription
-                        viewModel.updatePartsDatabase(computerComponent)
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = "Save",
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                }
-            }
+
         }
     }
     private fun signIn() {
