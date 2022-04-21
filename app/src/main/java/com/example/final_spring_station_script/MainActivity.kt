@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,6 +41,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
@@ -62,7 +64,8 @@ class MainActivity : ComponentActivity() {
                 viewModel.user = user
                 viewModel.listenToParts()
             }
-                // val parts by viewModel.computerComponent().observeAsState(initial = emptyList())
+            //val component by viewModel.components.observeAsState(initial = emptyList())
+            // val parts by viewModel.computerComponent().observeAsState(initial = emptyList())
             val specifiedComputerPart by viewModel.components.observeAsState(initial = emptyList())
                 Final_Spring_Station_ScriptTheme {
                     // A surface container using the 'background' color from the theme
@@ -71,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         //ComputerPartFacts("Android", parts, viewModel.specifiedComputerPart, viewModel.userPickedPart)
-                        ComputerPartFacts("Android")
+                        ComputerPartFacts("Android", specifiedComputerPart)
                     }
                 }
             }
@@ -306,17 +309,30 @@ class MainActivity : ComponentActivity() {
     {
         var inDescription by remember(computerComponent.Name) {mutableStateOf(computerComponent.Brand)}
         Row{
-            Column(Modifier.weight(2f)) {
+            Column(Modifier.weight(.01f)) {
                 Text(text= "")
             }
-            Column(Modifier.weight(4f)) {
-                Text(text= computerComponent.Name, style= MaterialTheme.typography.h6)
-                Text(text= computerComponent.Brand, style= MaterialTheme.typography.h6)
-               /* OutlinedTextField(value = inDescription,
-                    onValueChange = {inDescription = it},
-                    label  = { Text(stringResource(R.string.Name))},
-                    modifier = Modifier.fillMaxWidth()
-                )*/
+            Column(Modifier.weight(4f).background(Color.Gray).paddingFromBaseline(5.dp, 25.dp)) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.primary) {}
+                Text(text = computerComponent.Brand, style = MaterialTheme.typography.h6)
+                Text(text = computerComponent.Name, style = MaterialTheme.typography.h6)
+                Text(text = computerComponent.Type, style = MaterialTheme.typography.body1)
+
+                Text(
+                    text = "Price: $" + computerComponent.Price.toString(),
+                    style = MaterialTheme.typography.body1
+                )
+                Text(
+                    text = "Rating: " + computerComponent.Rating.toString(),
+                    style = MaterialTheme.typography.body1
+                )
+
+                /* OutlinedTextField(value = inDescription,
+                     onValueChange = {inDescription = it},
+                     label  = { Text(stringResource(R.string.Name))},
+                     modifier = Modifier.fillMaxWidth()
+                 )*/
             }
             Column(Modifier.weight(1f)) {
                 Button (

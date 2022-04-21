@@ -53,6 +53,12 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
                     firestore.collection("users").document(user.uid).collection("Type")
                         .document(computerComponent.Type)
                 }
+            computerComponent.Type = document.id
+            val handle = document.set(computerComponent)
+            handle.addOnSuccessListener {
+                Log.d("Firebase", "Document Saved")
+            }
+            handle.addOnFailureListener { Log.e("Firebase", "Save failed $it  ") }
         }
     }
     fun saveUser() {user?.let { user ->
@@ -89,7 +95,7 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
     }
     internal fun updatePartsDatabase(computerComponent : ComputerComponent) {
         user?.let { user ->
-            val photoDocument =
+            val partDocument =
                 if (computerComponent.Name.isEmpty()) {
                     // we need to create a new document.
                     firestore.collection("users").document(user.uid).collection("Type")
@@ -99,8 +105,8 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
                     firestore.collection("users").document(user.uid).collection("Type")
                         .document(computerComponent.Type).collection("name").document(computerComponent.Name)
                 }
-            computerComponent.Name = photoDocument.id
-            val handle = photoDocument.set(computerComponent)
+            computerComponent.Name = partDocument.id
+            val handle = partDocument.set(computerComponent)
             handle.addOnSuccessListener {
                 Log.i(ContentValues.TAG, "Successfully updated computer parts metadata")
             }
