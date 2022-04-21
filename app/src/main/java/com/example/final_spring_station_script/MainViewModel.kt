@@ -24,10 +24,8 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
     var components: MutableLiveData<List<ComputerComponent>> = MutableLiveData<List<ComputerComponent>>()
     var specifiedComputerPart: MutableLiveData<List<SpecifiedComputerPart>> = MutableLiveData<List<SpecifiedComputerPart>>()
     var userPickedPart: SpecifiedComputerPart by mutableStateOf(SpecifiedComputerPart(thisPartId = 0))
-
-
     var user: User? = null
-    var computerComponent by mutableStateOf(ComputerComponent())
+    var parts by mutableStateOf(SpecifiedComputerPart())
     private lateinit var firestore: FirebaseFirestore
     val eventParts : MutableLiveData<List<ComputerComponent>> = MutableLiveData<List<ComputerComponent>>()
 
@@ -44,17 +42,17 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
     fun saveParts() {
         user?.let { user ->
             val document =
-                if (computerComponent.Type == null || computerComponent.Type.isEmpty()) {
+                if (parts.thisPartType == null || parts.thisPartType.isEmpty()) {
                     // insert
-                    firestore.collection("users").document(user.uid).collection("PartIdFinal")
+                    firestore.collection("users").document(user.uid).collection("SpecifiedComputerPart")
                         .document()
                 } else {
                     // update
-                    firestore.collection("users").document(user.uid).collection("PartIdFinal ")
-                        .document(computerComponent.Type)
+                    firestore.collection("users").document(user.uid).collection("SpecifiedComputerPart")
+                        .document(parts.thisPartType)
                 }
-            computerComponent.Type = document.id
-            val handle = document.set(computerComponent)
+            parts.thisPartType = document.id
+            val handle = document.set(parts)
             handle.addOnSuccessListener {
                 Log.d("Firebase", "Document Saved")
             }
@@ -70,7 +68,7 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
 
     fun listenToParts() {
         user?.let { user ->
-            firestore.collection("users").document(user.uid).collection("PartIdFinal")
+            firestore.collection("users").document(user.uid).collection("SpecifiedComputerPart")
                 .addSnapshotListener { snapshot, error ->
                     // see of we received an error
                     if (error != null) {
@@ -79,16 +77,16 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
                     }
                     // if we reached this point, there was not an error, and we have data.
                     snapshot?.let {
-                        val allParts = ArrayList<ComputerComponent>()
-                        allParts.add(ComputerComponent(NEWLY_CREATED_PART))
+                        val allParts = ArrayList<SpecifiedComputerPart>()
+                        allParts.add(SpecifiedComputerPart(NEWLY_CREATED_PART))
                         val documents = snapshot.documents
                         documents.forEach {
-                            val computer = it.toObject(ComputerComponent::class.java)
+                            val computer = it.toObject(SpecifiedComputerPart::class.java)
                             computer?.let {
                                 allParts.add(computer)
                             }
                         }
-                        components.value = allParts
+                        specifiedComputerPart.value = allParts
                     }
                 }
         }
@@ -99,11 +97,11 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
                 if (computerComponent.Name.isEmpty()) {
                     // we need to create a new document.
                     firestore.collection("users").document(user.uid).collection("PartIdFinal")
-                        .document(computerComponent.Type).collection("name").document()
+                        .document(parts.thisPartType).collection("name").document()
                 } else {
                     // update existing document
                     firestore.collection("users").document(user.uid).collection("PartIdFinal")
-                        .document(computerComponent.Type).collection("name").document(computerComponent.Name)
+                        .document(parts.thisPartType).collection("name").document(computerComponent.Name)
                 }
             computerComponent.Name = partDocument.id
             val handle = partDocument.set(computerComponent)

@@ -64,9 +64,9 @@ class MainActivity : ComponentActivity() {
                 viewModel.user = user
                 viewModel.listenToParts()
             }
-            //val component by viewModel.components.observeAsState(initial = emptyList())
+            val component by viewModel.components.observeAsState(initial = emptyList())
             // val parts by viewModel.computerComponent().observeAsState(initial = emptyList())
-            val specifiedComputerPart by viewModel.components.observeAsState(initial = emptyList())
+            val specifiedComputerPart by viewModel.specifiedComputerPart.observeAsState(initial = emptyList())
                 Final_Spring_Station_ScriptTheme {
                     // A surface container using the 'background' color from the theme
                     Surface(
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         //ComputerPartFacts("Android", parts, viewModel.specifiedComputerPart, viewModel.userPickedPart)
-                        ComputerPartFacts("Android", specifiedComputerPart)
+                        ComputerPartFacts("Android", component, specifiedComputerPart as ArrayList<SpecifiedComputerPart>, viewModel.parts)
                     }
                 }
             }
