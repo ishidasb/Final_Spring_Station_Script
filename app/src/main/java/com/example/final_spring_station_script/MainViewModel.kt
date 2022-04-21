@@ -42,17 +42,17 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
     fun saveParts() {
         user?.let { user ->
             val document =
-                if (parts.thisPartType == null || parts.thisPartType.isEmpty()) {
+                if (userPickedPart.thisPartType == null || userPickedPart.thisPartType.isEmpty()) {
                     // insert
                     firestore.collection("users").document(user.uid).collection("SpecifiedComputerPart")
                         .document()
                 } else {
                     // update
                     firestore.collection("users").document(user.uid).collection("SpecifiedComputerPart")
-                        .document(parts.thisPartType)
+                        .document(userPickedPart.thisPartType)
                 }
-            parts.thisPartType = document.id
-            val handle = document.set(parts)
+            userPickedPart.thisPartType = document.id
+            val handle = document.set(userPickedPart)
             handle.addOnSuccessListener {
                 Log.d("Firebase", "Document Saved")
             }
@@ -97,11 +97,11 @@ class MainViewModel (var componentService: ComponentService = ComponentService()
                 if (computerComponent.Name.isEmpty()) {
                     // we need to create a new document.
                     firestore.collection("users").document(user.uid).collection("PartIdFinal")
-                        .document(parts.thisPartType).collection("name").document()
+                        .document(userPickedPart.thisPartType).collection("name").document()
                 } else {
                     // update existing document
                     firestore.collection("users").document(user.uid).collection("PartIdFinal")
-                        .document(parts.thisPartType).collection("name").document(computerComponent.Name)
+                        .document(userPickedPart.thisPartType).collection("name").document(computerComponent.Name)
                 }
             computerComponent.Name = partDocument.id
             val handle = partDocument.set(computerComponent)
